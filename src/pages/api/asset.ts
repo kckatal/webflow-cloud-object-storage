@@ -22,6 +22,7 @@ export const GET: APIRoute = async ({ request, locals }) => {
   return new Response(data, {
     headers: {
       "Content-Type": contentType,
+      "X-Robots-Tag": "noindex",
     },
   });
 };

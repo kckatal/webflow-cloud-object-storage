@@ -6,9 +6,9 @@ import react from "@astrojs/react";
 
 // https://astro.build/config
 export default defineConfig({
-  base: "/app",
+  base: "/storage",
   build: {
-    assetsPrefix: "/app",
+    assetsPrefix: "/storage",
   },
   security: {
     checkOrigin: false,
