@@ -154,8 +154,8 @@ export default function FileUploader() {
     setProgress(0);
 
     try {
-      const assetsPrefix = import.meta.env.ASSETS_PREFIX || "";
-      const BASE_CF_URL = `${assetsPrefix}/api/multipart-upload`;
+      // Use BASE_URL instead of ASSETS_PREFIX for API endpoints
+      const BASE_CF_URL = `${import.meta.env.BASE_URL}/api/multipart-upload`;
       const key = file.name;
       const CHUNK_SIZE = 5 * 1024 * 1024; // 5MB
       const totalParts = Math.ceil(file.size / CHUNK_SIZE);
@@ -524,10 +524,11 @@ export default function FileUploader() {
             {files.map((file, index) => {
               const fileName = file.name || file.key || "Unknown file";
               const fileKey = file.key || file.name || `file-${index}`;
+              // Construct asset URL through origin's proxy endpoint (not direct bucket URL)
               const fileLink =
                 file.link ||
                 (file.key
-                  ? `${import.meta.env.ASSETS_PREFIX}/api/asset?key=${file.key}`
+                  ? `${import.meta.env.BASE_URL}/api/asset?key=${file.key}`
                   : "");
               const uploadDate =
                 file.dateUploaded || file.uploaded || new Date().toISOString();

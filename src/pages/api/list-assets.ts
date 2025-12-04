@@ -37,8 +37,26 @@ export const GET: APIRoute = async ({ locals, request }) => {
       cursor = next.cursor;
     }
 
+    // Transform objects to remove any direct bucket URLs
+    // This ensures all assets are served through the origin URL
+    const transformedObjects = listed.objects.map((obj) => ({
+      key: obj.key,
+      version: obj.version,
+      size: obj.size,
+      etag: obj.etag,
+      httpEtag: obj.httpEtag,
+      uploaded: obj.uploaded,
+      httpMetadata: obj.httpMetadata,
+      customMetadata: obj.customMetadata,
+      // Explicitly omit any URL properties that might point to direct bucket access
+    }));
+
     // Return the files as a JSON object
-    return new Response(JSON.stringify(listed.objects), {
+    // Old code (returned raw R2 objects which may include direct bucket URLs):
+    // return new Response(JSON.stringify(listed.objects), {
+    //   headers: { "Content-Type": "application/json" },
+    // });
+    return new Response(JSON.stringify(transformedObjects), {
       headers: { "Content-Type": "application/json" },
     });
   } catch (error) {
